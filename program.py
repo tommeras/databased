@@ -1,3 +1,4 @@
+from datetime import date
 import sqlite3
 
 #Her lager vi connection
@@ -5,7 +6,41 @@ con = sqlite3.connect("kaffe.db")
 cursor = con.cursor()
 
 def FørsteBrukerHistorie():
-    print("under produksjon")
+    # epost = input("Hva er E-posten din? ")
+    # passord = input("Hva er passordet ditt? ")
+    # cursor.execute("""SELECT * FROM Bruker""")
+    # result = cursor.fetchall()
+    # b = False
+    # for x in result:
+    #     if(epost == x[0] and passord == x[1]):
+    #         b=True
+    # if(b):
+    #     print("Du er logget inn")
+    # else:
+    #     print("Feil brukernavn eller passord\nDu må skrive det inn på nytt")
+    #     FørsteBrukerHistorie()
+    dato = date.today()
+    år = date.year
+    måned = date.month
+    dag = date.day
+
+
+
+    brenneri = input("Hvilket brenneri er kaffen fra? ")
+    kaffe = input("Hva er Kaffens navn? ")
+    poeng = input("Hvor mange poeng av 10 vil du gi den? ")
+    notat = input("Skriv ned noen tanker om kaffen: ")
+
+    cursor.execute(f"""SELECT KaffeId from Kaffe WHERE Kaffe.Navn like '{kaffe}'""")
+    result = cursor.fetchone()
+    kaffeId = result[0]
+
+    cursor.execute(f'''INSERT INTO Kaffesmaking (Smaksnotat, Poeng, BrukerId, År, Måned, Dag , KaffeId)
+            VALUES ("{notat}", {poeng}, "test@test.test", 2022, 03, 24,{kaffeId})''')
+            #jobba litt, men ble trøtt. Det som mangler her er å få til å 
+            #gjøre om datetime objekter til integers sånn at vi kan bruke dem
+    con.commit()
+
 def AndreBrukerHistorie():
     cursor.execute("""SELECT FulltNavn, count(BrukerId) as Antall 
                         FROM Kaffesmaking
