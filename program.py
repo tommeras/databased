@@ -67,9 +67,6 @@ def skrivNotat(epost, kaffeId, poeng, notat):
 
         cursor.execute(f'''INSERT INTO Kaffesmaking (Smaksnotat, Poeng, BrukerId, År, Måned, Dag , KaffeId)
                 VALUES ("{notat}", {poeng}, "{epost}", {år}, {måned}, {dag},{kaffeId})''')
-                #VALUES ("TESTINPUT", 5, test@test.test, 2022, 03, 25, 1)''')
-                #jobba litt, men ble trøtt. Det som mangler her er å få til å 
-                #gjøre om datetime objekter til integers sånn at vi kan bruke dem
         con.commit()
     except:
         print("Obs, her skjedde det en feil, prøv på nytt")
@@ -191,13 +188,18 @@ def FjerdeBrukerHistorie():
         print("{: >25} {: >20}".format(*rad))
 
 def FemteBrukerHistorie():
-    print("under produskjon 4")
     beskrivelse = input("Hvilket ord skal kaffens behandlingsmetode ikke bli beskrivet med? ")
+    land1 = input("Hvilket land skal kaffen være fra? ")
+    land2 = input("Hvilket annet land skal kaffen være fra? ")
+
+
     cursor.execute(f"""SELECT Brenneri.Navn as BrenneriNavn, Kaffe.Navn as KaffeNavn FROM Kaffe 
                     INNER JOIN Brenneri on Kaffe.BrenneriId = Brenneri.BrenneriId
                     INNER JOIN Kaffeparti on Kaffe.KaffepartiId = Kaffeparti.KaffepartiId
                     INNER JOIN Behandlingsmetode on Behandlingsmetode.BehandlingsId = Kaffeparti.BehandlingsId
-                    WHERE (Behandlingsmetode.Beskrivelse NOT LIKE '%{beskrivelse}%')""")
+					INNER JOIN Gård on Kaffeparti.GårdId = Gård.GårdId
+					INNER JOIN Region on Gård.Region = Region.Region
+                    WHERE (Behandlingsmetode.Beskrivelse NOT LIKE '%{beskrivelse}%') AND (Region.Land like( '{land1}' ) or Region.Land like ('{land2}'))""")
     print(" ")
     print("Resultater: ")
     result = cursor.fetchall()
@@ -240,7 +242,7 @@ print("""
 2. Statistikk om hvem som har drukket mest kaffe
 3. Finne kaffen med mest verdi for pengene
 4. Søke etter kaffe med spesifikk beskrivelse (i enkelt ord)
-5. Finne kaffe som ikke innheolder behandlingsmetoden du vil unngå
+5. Finne kaffe som ikke innheolder behandlingsmetoden du vil unngå og kommer fra to land som du velger
 """)
 velgHistorie()
 
