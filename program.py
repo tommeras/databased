@@ -30,6 +30,7 @@ Du har nå laget en bruker med eposten: '{result[0]}'.
 Passordet ditt er: ***** (Dette er hemmelig dessverre så håper du husker)
 Ditt fulle navn er: {result[1]}.
             """)
+        velgHistorie()
     except:
         print("Du har skrevet inn en allerede eksisterende bruker. Bruk en annen epost og prøv på nytt.")
         lagBruker()
